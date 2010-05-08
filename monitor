@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require_relative 'boot'
+Bundler.require :monitor
+
+key = ARGV.empty? ? '*' : ARGV.join(',')
+
+AMQP.start(configatron.mq.to_hash) do
+  topic = MQ.topic('userstream', :passive => true)
+  queue = MQ.queue("userstream-monitor-#$$", :auto_delete => true)
+  queue.bind topic, :key => key
+
+  queue.subscribe do |message|
+    p Yajl::Parser.parse(message, :symbolize_keys => true)
+  end
+end

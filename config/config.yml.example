@@ -1,0 +1,6 @@
+accounts:
+#  - [login1, password1]
+#  - [login2, password2]
+
+mq:
+  host: localhost
